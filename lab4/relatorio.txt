@@ -1,0 +1,12 @@
+Nesse laboratorio, testei o programa com 3 diferentes estratégias de sinalização: lock (mutex), lock no padrão read write (pthread) e
+lock no padrão read write de implementação própria. Na implementação própria adaptei o código dos slides dando prioridade às leituras, 
+já que são a maioria das ações executadas no programa. No final, tivemos os tempos da seguinte forma:
+
+
+	           mutex      pthread	 imp. propria
+1 thread     1.2s	       2.1s	   1.56s 
+2 threads    2.2s	       3.5s    3.25s
+4 threads    3s		       4s	     7.5s
+
+Podemos observar que nas estratégias analisadas, é gasto um tempo considerável bloqueando e desbloqueando threads, 
+perdendo parte do ganho que a concorrencia tem a oferecer.
