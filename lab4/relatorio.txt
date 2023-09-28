@@ -5,8 +5,8 @@ já que são a maioria das ações executadas no programa. No final, tivemos os 
 
 	           mutex      pthread	 imp. propria
 1 thread     1.2s	       2.1s	   1.56s 
-2 threads    2.2s	       3.5s    3.25s
-4 threads    3s		       4s	     7.5s
+2 threads    2.2s	       3.5s        3.25s
+4 threads    3s		       4s	   7.5s
 
 Podemos observar que nas estratégias analisadas, é gasto um tempo considerável bloqueando e desbloqueando threads, 
 perdendo parte do ganho que a concorrencia tem a oferecer.
