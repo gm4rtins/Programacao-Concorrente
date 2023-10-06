@@ -1,7 +1,3 @@
-/*le um arquivo teste.txt e imprime cada linha em ordem. 
-para executar no terminal compile e digite [executavel] [nthreads]. */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -11,22 +7,36 @@ para executar no terminal compile e digite [executavel] [nthreads]. */
 #define TAMANHO 100 //tamanho de cada string
 #define QUANTIDADE 5 //quantidades de strings armazenadas no buffer
 char buffer[QUANTIDADE][TAMANHO]; //array que vai guardar as strings
-int i_cons = 0; //index que vao indicar onde deve-se inserir ou consumir
 sem_t sem_prod, sem_cons;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void insere(char item[TAMANHO]){
+    static int in=0;
+    //aguarda slot vazio
+    sem_wait(&sem_prod);
+    strcpy(buffer[in], item);
+    in = (in + 1) % QUANTIDADE;
+    //sinaliza um slot cheio
+    sem_post(&sem_cons);
+    }
+
+void retira(){
+    static int out=0;
+    //aguarda slot cheio
+    sem_wait(&sem_cons);
+    printf("%s", buffer[out]);
+    out = (out + 1) % QUANTIDADE;
+    //sinaliza um slot vazio
+    sem_post(&sem_prod);
+}
 
 
 
 void* consumidor(){
 	while(1){
-	static int i_cons = 0;
-	sem_wait(&sem_cons);
-	pthread_mutex_lock(&mutex);
-	printf(buffer[i_cons]);
-	strcpy(buffer[i_cons], "\0");
-	i_cons = (i_cons+1)%QUANTIDADE;
-	pthread_mutex_unlock(&mutex);
-	sem_post(&sem_prod);}
+    retira();
+    }
+    
 }
 
 
@@ -62,12 +72,13 @@ int main(int argc, char *argv[]){
 	//produzindo
 
 	while (fgets(str_aux, 50, ptr) != NULL) {
-		sem_wait(&sem_prod);
+		/*sem_wait(&sem_prod);
 		pthread_mutex_lock(&mutex);
         	strcpy(buffer[i_prod], str_aux);
 		pthread_mutex_unlock(&mutex);
 		sem_post(&sem_cons);
-		i_prod = (i_prod+1)%QUANTIDADE;
+		i_prod = (i_prod+1)%QUANTIDADE;*/
+        insere(str_aux);
     	}
 	
 	for(j=0;j<NTHREADS;j++){
