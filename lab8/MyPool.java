@@ -105,7 +105,7 @@ class MyPool {
 
       
       //--PASSO 3: dispara a execução dos objetos runnable usando o pool de threads
-      for (int i = 0; i < 100; i++) {
+      for (int i = 0; i < 400; i++) {
         Runnable r = new TestePrimo(i, nPrimos);
         pool.execute(r);
       }
